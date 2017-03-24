@@ -1,6 +1,6 @@
 # Java-Visual-Novel
 
-## Project set up with Slick2D
+## Eclipse Project set up with Slick2D 
 1. Download  [Slick2D](http://slick.ninjacave.com/slick.zip)
 2. Download [LWJGL](https://sourceforge.net/projects/java-game-lib/files/Official%20Releases/LWJGL%202.9.3/)
 4. Extract the two zips to a suitable location.
@@ -18,3 +18,4 @@
 ## Working on Github
 - We don't upload the whole project because of difference in OS.
 - We only upload class files and other souce files.
+- When commiting a change, don't do it through eclipse. Simply replace the new files on github.
