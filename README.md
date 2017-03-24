@@ -19,3 +19,6 @@
 - We don't upload the whole project because of difference in OS.
 - We only upload class files and other souce files.
 - When commiting a change, don't do it through eclipse. Simply replace the new files on github.
+
+## Learning Slick2d
+- The best way to learn slick is to go over the tests at extracted slick/src/org/newdawn/slick/tests/. Make sure to copy slick/testdata to project where you run the slick tests. Each test is a standalone application.
