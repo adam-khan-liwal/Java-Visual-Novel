@@ -18,6 +18,12 @@ public class Play extends BasicGameState{
 	
 	HashMap<Integer, String> action_types;
 	
+	// Alternative way to get the files
+	/*
+	static final String directory = System.getProperty("user.dir");
+	static final String DB_URL = "jdbc:sqlite:"+directory;
+	static final String images_path = directory + "\\Images\\";
+	*/
 	static final String DB_URL = "jdbc:sqlite:/Library/WebServer/Documents/csci213/mysqlitedb.db";
 	static final String images_path = "/Library/WebServer/Documents/csci213/images/";
 	
@@ -331,7 +337,7 @@ public class Play extends BasicGameState{
 	}
  
 	public int getID() {
-		return 0;
-	}
+		return 1;   // Menu state is 0 and Play state is 1
+ 	}
 
 }
