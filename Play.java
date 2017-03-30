@@ -21,8 +21,8 @@ public class Play extends BasicGameState{
 	// Alternative way to get the files
 	/*
 	static final String directory = System.getProperty("user.dir");
-	static final String DB_URL = "jdbc:sqlite:"+directory;
-	static final String images_path = directory + "\\Images\\";
+	static final String DB_URL = "jdbc:sqlite:"+directory+"\\mysqlitedb.db";
+	static final String images_path = directory + "\\Assets\\Images\\";
 	*/
 	static final String DB_URL = "jdbc:sqlite:/Library/WebServer/Documents/csci213/mysqlitedb.db";
 	static final String images_path = "/Library/WebServer/Documents/csci213/images/";
