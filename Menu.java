@@ -1,5 +1,9 @@
 import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.*;
+
+import java.util.ArrayList;
+
 import org.lwjgl.input.*;
 
 /**
@@ -9,30 +13,30 @@ import org.lwjgl.input.*;
  *
  */
 public class Menu extends BasicGameState {
-	
+
 	// Directory for images
 	String images_path = System.getProperty("user.dir") + "\\Assets\\Images\\";
 	// Directory for UI elements
 	String ui_path = System.getProperty("user.dir") + "\\Assets\\UI\\";
-	
+
+	ArrayList<Rectangle> menu_boxes = new ArrayList<Rectangle>();
+
 	// Buttons
 	Image start;
 	Image load;
 	Image quit;
 	// Background
 	Image room;
-	
-	// Base coordinates of the first button
-	int basex = 870; 
-	int basey = 180;
-	
+
+	StateBasedGame sbg;
+
 	public String mouse = "No Input"; // For mouse pointer location
-	
+
 	public Menu()
 	{
-		
+
 	}
-	
+
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException 
 	{
 		// All images are set to files
@@ -40,91 +44,136 @@ public class Menu extends BasicGameState {
 		quit = new Image (ui_path + "quit.png");
 		load = new Image (ui_path + "load.png");
 		room = new Image (images_path + "room2.jpg");
+		this.sbg = sbg;
 	}
-	
+
 	public void render (GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
 	{	
-		int rscale = basey;  // Stores the y coordinate
-		
+		float basex = (75f/100f) * gc.getWidth();  // Draws after 75% of the width is covered
+		float basey = (30f/100f) * gc.getHeight(); // Draw after 30% of the height is covered
 		// Background image
 		room.draw(0, 0);
-		
+
 		// Mouse coordinates (Debug only)
 		g.drawString(mouse, 50, 50);
-		
+
 		// Each button is drawn 40 pixels below another
-		start.draw(basex, rscale);
-		rscale += start.getHeight() + 40;
-		load.draw(basex, rscale);
-		rscale += load.getHeight() + 40;
-		quit.draw(basex, rscale);
+		int x = (int)basex;
+		int y = (int)basey;
+		start.draw(x, y);
+		menu_boxes.add(new Rectangle(x, y, start.getWidth(), start.getHeight()));
+		y += start.getHeight() + 40;
+		load.draw(x, y);
+		menu_boxes.add(new Rectangle(x, y, load.getWidth(), load.getHeight()));
+		y += load.getHeight() + 40;
+		quit.draw(x, y);
+		menu_boxes.add(new Rectangle(x, y, quit.getWidth(), quit.getHeight()));
 	}
-	
+
 	public void update (GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
 	{
 		Input input = gc.getInput();
+		mouse = "X: " + Mouse.getX() + " Y: " + Mouse.getY();
 		
-		// Java and Graphics coordinates work differently when it comes to the y coordinate
-		int mousex = Mouse.getX();
-		int mousey = gc.getHeight() - Mouse.getY();  
-		int uscale = basey;
-		mouse = "X: " + mousex + " Y: " + mousey;
-		
-		// Start button
-		if(mousex > basex && mousex  < (basex+start.getWidth())  && mousey > uscale && mousey < (uscale+start.getHeight())) // If the mouse pointer is over the button
-		{
-			start = new Image (ui_path + "start_hover.png"); // Image updates
-			
-			if(input.isMouseButtonDown(0)) // If user clicks button
-			{
-				sbg.enterState(1); // Starts game (Play class)
-			}
+		// Series of if/else statements works as intended
+		if(menu_boxes.get(0).contains(Mouse.getX(), gc.getHeight() - Mouse.getY()))
+		{	
+			start = new Image (ui_path + "start_hover.png");
 		}
 		else
 		{
-	        start = new Image (ui_path + "start.png"); // Otherwise stays the same (If pointer goes out of direction)
+			start = new Image (ui_path + "start.png");
 		}
 		
-		uscale = uscale + start.getHeight() + 40; // Scalining system reduces the number of places to change when an edit is made
-		
-		// Load button
-		if(mousex > basex && mousex  < (basex+load.getWidth())  && mousey > uscale && mousey < (uscale+load.getHeight()))
-		{
+		if(menu_boxes.get(1).contains(Mouse.getX(), gc.getHeight() - Mouse.getY()))
+		{	
 			load = new Image (ui_path + "load_hover.png");
-			
-			if(input.isMouseButtonDown(0))
-			{
-				sbg.enterState(1);  // Needs load screen
-			}
 		}
 		else
 		{
 			load = new Image (ui_path + "load.png");
 		}
 		
-		uscale = uscale + load.getHeight() + 40;
-		
-		// Quit button
-		if(mousex > basex && mousex  < (basex+quit.getWidth())  && mousey > uscale && mousey < (uscale+quit.getHeight()))
-		{
+		if(menu_boxes.get(2).contains(Mouse.getX(), gc.getHeight() - Mouse.getY()))
+		{	
 			quit = new Image (ui_path + "quit_hover.png");
-			
-			if(input.isMouseButtonDown(0))
-			{
-				System.out.println("Program is Ending");
-				System.exit(0);
-			}
 		}
 		else
 		{
 			quit = new Image (ui_path + "quit.png");
 		}
 		
-	}
-	
-	public int getID()
-	{
-		return 0;
+		// Ideal solution but does not work very well
+		/*
+		for (int i = 0; i<menu_boxes.size(); i++)
+		{
+			if(menu_boxes.get(i).contains(Mouse.getX(), gc.getHeight() - Mouse.getY()))
+			{	
+				if(i == 0 )
+				{
+					load = new Image (ui_path + "load.png");
+					quit = new Image (ui_path + "quit.png");
+					
+					start = new Image (ui_path + "start_hover.png");
+					System.out.println("Hoverstart");
+				}
+				else if(i == 1)
+				{
+					start = new Image (ui_path + "start.png");
+					quit = new Image (ui_path + "quit.png");
+					
+					load = new Image (ui_path + "load_hover.png");
+					System.out.println("Hoverload");
+				}
+				else if(i==2)
+				{
+					start = new Image (ui_path + "start.png");
+					load = new Image (ui_path + "load.png");
+					
+					quit = new Image (ui_path + "quit_hover.png");
+					System.out.println("Hoverquit");
+				}
+			}
+		}
+		*/
+		
 	}
 
-}
+	@Override
+	public void mouseReleased(int button, int x, int y)
+	{
+		if(button == Input.MOUSE_LEFT_BUTTON)
+		{
+			for(int i = 0; i< menu_boxes.size(); i++)
+			{
+				if(menu_boxes.get(i).contains(x, y))
+				{
+					if(i == 0)
+					{
+						System.out.println("Start Game");
+						sbg.enterState(1);
+					}
+					else if( i==1 )
+					{
+						System.out.println("Load Game");
+						sbg.enterState(1); //Load screwwn??
+					}
+					else if( i==2 )
+					{
+						System.out.println("Program is ending");
+						System.exit(0);
+					}
+
+				}
+			}
+		}
+
+	}
+
+
+		public int getID()
+		{
+			return 0;
+		}
+
+	}
