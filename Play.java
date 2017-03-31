@@ -1,5 +1,6 @@
 package eclipse;
 
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.*;
@@ -11,23 +12,23 @@ import java.util.HashMap;
  * VN engine implementation
  *
  * @author Adam Khan Liwal
- * @author Jegan Puroshothaman
+ * @author Jegan Purushothaman
  * @version 1.0
  */
 public class Play extends BasicGameState{
 	
 	HashMap<Integer, String> action_types;
 	
-	// Alternative way to get the files
-	/*
 	static final String directory = System.getProperty("user.dir");
-	static final String DB_URL = "jdbc:sqlite:"+directory+"\\mysqlitedb.db";
+	static final String DB_URL = "jdbc:sqlite:"+directory+ "\\mysqlitedb.db";
 	static final String images_path = directory + "\\Assets\\Images\\";
-	*/
-	static final String DB_URL = "jdbc:sqlite:/Library/WebServer/Documents/csci213/mysqlitedb.db";
-	static final String images_path = "/Library/WebServer/Documents/csci213/images/";
+	static final String ui_path = System.getProperty("user.dir") + "\\Assets\\UI\\";
 	
+	public String mouse = "No Input"; // For mouse pointer location
+	
+	private Image textbox;
 	private Image background;
+	private Image choiceBox;
 	private String dialogue = "";
 	private Sound sound;
 	private Music bg_music;
@@ -62,45 +63,55 @@ public class Play extends BasicGameState{
  
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
+		textbox = new Image (ui_path +"textbox.png");
+		choiceBox = new Image (ui_path + "choice.png");
 		nextAction();
 	}
  
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 		
-		
+		g.drawString(mouse, 100, 100);
 		background.draw(0, 0, gc.getWidth(), gc.getHeight(), new Color (255, 255, 255, a));
 		
-		// dialogue box
-		g.setColor(Color.black);
-		// 20% of the screen
-		float dialogue_height = (20f/100f * gc.getHeight());
-		float dialogue_y = gc.getHeight() - dialogue_height;
-		g.fillRect(0, dialogue_y, gc.getWidth(), dialogue_height);
+		// Dialogue Box
+		float textbox_x = gc.getWidth()*(15f/100f);
+		float textbox_y = gc.getHeight()-150;
+		float dialogue_y = gc.getHeight() - textbox_y;
 		
-		g.setColor(Color.white);
+		// Choice Box
+		float choice_x = gc.getWidth()*(20f/100f);
+		float choice_y = gc.getHeight()*(20f/100f);
+		
+		g.setColor(Color.black);
 		
 		if(show_choices == true)
 		{
 			for(int i = 0; i< choices.size(); i++)
 			{
+				// Draws the choices and adds the text
 				g.setColor(Color.white);
-				float choice_y =  dialogue_y + (20 * i);
-				choice_boxes.add(new Rectangle(0, choice_y, gc.getWidth(), 20));
-				g.fill(choice_boxes.get(i));
-				g.setColor(Color.black);
-				g.drawString(choices.get(i).text, 0, choice_y);
+				choiceBox.draw(choice_x, choice_y);
+				g.drawString(choices.get(i).text, choice_x+100, choice_y+70);
+				choice_boxes.add(new Rectangle(choice_x, choice_y, choiceBox.getWidth(), choiceBox.getHeight()));
+				choice_y = choiceBox.getHeight()+ choice_y  + 20;
 			}
 		}
 		else
 		{
-			g.drawString(dialogue, 0, dialogue_y);
+			// Draws the dialogue box and displays the dialogue
+			textbox.draw(textbox_x, textbox_y);
+			g.drawString(dialogue,textbox_x+50, textbox_y+30);
 		}
 				
 	}
  
-	public void update(GameContainer gc, StateBasedGame sbg, int delta)
-			throws SlickException {
+	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+	
+		int mousex = Mouse.getX();
+		int mousey = gc.getHeight() - Mouse.getY();  
+		mouse = "X: " + mousex + " Y: " + mousey;
+		
 		if(a != 255)
 		{
 			a+=5;
@@ -337,7 +348,7 @@ public class Play extends BasicGameState{
 	}
  
 	public int getID() {
-		return 1;   // Menu state is 0 and Play state is 1
- 	}
+		return 1;
+	}
 
 }
