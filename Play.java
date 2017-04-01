@@ -19,10 +19,18 @@ public class Play extends BasicGameState{
 	
 	HashMap<Integer, String> action_types;
 	
+	// windows
+//	static final String directory = System.getProperty("user.dir");
+//	static final String DB_URL = "jdbc:sqlite:"+directory+ "\\mysqlitedb.db";
+//	static final String images_path = directory + "\\Assets\\Images\\";
+//	static final String ui_path = System.getProperty("user.dir") + "\\Assets\\UI\\";
+	
+	// mac
 	static final String directory = System.getProperty("user.dir");
-	static final String DB_URL = "jdbc:sqlite:"+directory+ "\\mysqlitedb.db";
-	static final String images_path = directory + "\\Assets\\Images\\";
-	static final String ui_path = System.getProperty("user.dir") + "\\Assets\\UI\\";
+	static final String DB_URL = "jdbc:sqlite:"+directory+ "/mysqlitedb.db";
+	static final String images_path = directory + "/Assets/Images/";
+	static final String ui_path = System.getProperty("user.dir") + "/Assets/UI/";
+	
 	
 	public String mouse = "No Input"; // For mouse pointer location
 	
